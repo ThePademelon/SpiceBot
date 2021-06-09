@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace SpiceBot
+namespace SpiceBot.Data
 {
     public class SpiceContext : DbContext
     {
