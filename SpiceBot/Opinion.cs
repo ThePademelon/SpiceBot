@@ -1,6 +1,6 @@
 namespace SpiceBot
 {
-    internal enum Opinion
+    public enum Opinion
     {
         Based,
         Cringe,

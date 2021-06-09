@@ -9,7 +9,7 @@ using SpiceBot.Data;
 
 namespace SpiceBot
 {
-    internal class DiscordBotHost : IHostedService
+    public class DiscordBotHost : IHostedService
     {
         private readonly ILogger<DiscordBotHost> _logger;
         private static DiscordSocketClient _client;

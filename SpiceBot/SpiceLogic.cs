@@ -10,7 +10,7 @@ using SpiceBot.Data;
 
 namespace SpiceBot
 {
-    internal class SpiceLogic
+    public class SpiceLogic
     {
         private readonly ILogger<DiscordBotHost> _logger;
         private readonly SpiceContext _spiceContext;
@@ -44,7 +44,7 @@ namespace SpiceBot
             }
         }
 
-        private async Task<Opinion> GetOpinion(string messageContent)
+        public async Task<Opinion> GetOpinion(string messageContent)
         {
             // TODO: This really should be a query of some sort for performance
             var spiceContextStatements = await EntityFrameworkQueryableExtensions.ToListAsync(_spiceContext.Statements);
