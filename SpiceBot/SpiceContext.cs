@@ -15,7 +15,8 @@ namespace SpiceBot
         {
         }
 
-        public virtual DbSet<Noun> Nouns { get; set; }
+        public virtual DbSet<Thing> Things { get; set; }
+        public virtual DbSet<Statement> Statements { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -27,7 +28,7 @@ namespace SpiceBot
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Noun>(entity =>
+            modelBuilder.Entity<Thing>(entity =>
             {
                 entity.HasNoKey();
             });

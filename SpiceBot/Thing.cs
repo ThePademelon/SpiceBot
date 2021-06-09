@@ -3,7 +3,7 @@
 
 namespace SpiceBot
 {
-    public class Noun
+    public class Thing
     {
         public string Name { get; set; }
         public bool IsBased { get; set; }

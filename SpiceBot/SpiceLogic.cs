@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -22,7 +21,7 @@ namespace SpiceBot
 
         public async Task HandleMessage(SocketMessage message)
         {
-            switch (await GetOpinion(message.Content))
+            switch (GetOpinion(message.Content))
             {
                 case Opinion.Based:
                     await message.Channel.SendMessageAsync("Based", messageReference: new MessageReference(message.Id));
@@ -37,11 +36,28 @@ namespace SpiceBot
             }
         }
 
-        private async Task<Opinion> GetOpinion(string messageContent)
+        private Opinion GetOpinion(string messageContent)
         {
-            var firstOrDefault = (await _spiceContext.Nouns.ToListAsync()).FirstOrDefault(x => messageContent.Contains($"I like {x.Name}", StringComparison.InvariantCultureIgnoreCase));
-            if (firstOrDefault is null) return Opinion.None;
-            return firstOrDefault.IsBased ? Opinion.Based : Opinion.Cringe;
+            // TODO: This really should be a query of some sort for performance
+            foreach (var thing in _spiceContext.Things)
+            {
+                foreach (var statement in _spiceContext.Statements)
+                {
+                    if (messageContent.Contains(string.Format(statement.Format, thing.Name), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return GetOpinion(statement, thing);
+                    }
+                }
+            }
+
+            return Opinion.None;
+        }
+
+        private static Opinion GetOpinion(Statement messageContent, Thing thing)
+        {
+            var isBased = thing.IsBased;
+            if (messageContent.Negates) isBased = !isBased;
+            return isBased ? Opinion.Based : Opinion.Cringe;
         }
     }
 }
