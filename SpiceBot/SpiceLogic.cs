@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
 
@@ -8,21 +10,25 @@ namespace SpiceBot
     internal class SpiceLogic
     {
         private readonly ILogger<DiscordBotHost> _logger;
+        private readonly SpiceContext _spiceContext;
 
-        public SpiceLogic(ILogger<DiscordBotHost> logger)
+        public SpiceLogic(ILogger<DiscordBotHost> logger, SpiceContext spiceContext)
         {
             _logger = logger;
+            _spiceContext = spiceContext;
+
+            spiceContext.Database.EnsureCreated();
         }
 
         public async Task HandleMessage(SocketMessage message)
         {
-            switch (GetOpinion(message.Content))
+            switch (await GetOpinion(message.Content))
             {
                 case Opinion.Based:
-                    await message.Channel.SendMessageAsync("Based", messageReference: message.Reference);
+                    await message.Channel.SendMessageAsync("Based", messageReference: new MessageReference(message.Id));
                     break;
                 case Opinion.Cringe:
-                    await message.Channel.SendMessageAsync("Cringe", messageReference: message.Reference);
+                    await message.Channel.SendMessageAsync("Cringe", messageReference: new MessageReference(message.Id));
                     break;
                 case Opinion.None:
                     break;
@@ -31,19 +37,11 @@ namespace SpiceBot
             }
         }
 
-        private static Opinion GetOpinion(string messageContent)
+        private async Task<Opinion> GetOpinion(string messageContent)
         {
-            if (messageContent.Contains("I like choccy milk", StringComparison.InvariantCultureIgnoreCase))
-            {
-                return Opinion.Based;
-            }
-
-            if (messageContent.Contains("I like weed", StringComparison.InvariantCultureIgnoreCase))
-            {
-                return Opinion.Cringe;
-            }
-
-            return Opinion.None;
+            var firstOrDefault = (await _spiceContext.Nouns.ToListAsync()).FirstOrDefault(x => messageContent.Contains($"I like {x.Name}", StringComparison.InvariantCultureIgnoreCase));
+            if (firstOrDefault is null) return Opinion.None;
+            return firstOrDefault.IsBased ? Opinion.Based : Opinion.Cringe;
         }
     }
 }

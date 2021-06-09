@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -13,6 +12,8 @@ namespace SpiceBot
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<DiscordBotHost>();
+                    services.AddEntityFrameworkSqlite();
+                    services.AddDbContext<SpiceContext>();
                 })
                 .ConfigureAppConfiguration(app =>
                 {

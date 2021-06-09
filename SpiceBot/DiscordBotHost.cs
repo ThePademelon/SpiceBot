@@ -14,14 +14,14 @@ namespace SpiceBot
         private static DiscordSocketClient _client;
         private readonly SpiceLogic _logic;
 
-        public DiscordBotHost(IConfiguration config, ILogger<DiscordBotHost> logger)
+        public DiscordBotHost(IConfiguration config, ILogger<DiscordBotHost> logger, SpiceContext spiceContext)
         {
             _logger = logger;
             _client = new DiscordSocketClient();
             _client.LoggedIn += ClientOnLoggedIn;
             _client.MessageReceived += ClientOnMessageReceived;
             _client.LoginAsync(TokenType.Bot, config["Token"]);
-            _logic = new SpiceLogic(logger);
+            _logic = new SpiceLogic(logger, spiceContext);
         }
 
         private async Task ClientOnMessageReceived(SocketMessage message)
