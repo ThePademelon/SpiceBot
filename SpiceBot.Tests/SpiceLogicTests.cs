@@ -11,6 +11,7 @@ namespace SpiceBot.Tests
         [InlineData("i hate math", Opinion.Cringe)]
         [InlineData("choccy milk", Opinion.Based)]
         [InlineData("tweed", Opinion.None)]
+        [InlineData("there are too many pot holes on main street.", Opinion.Cringe)]
         public async Task CanDetermineCorrectOpinion(string message, Opinion opinion)
         {
             var logic = new SpiceLogic(
