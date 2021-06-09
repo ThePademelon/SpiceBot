@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SpiceBot.Data;
 
@@ -21,7 +23,7 @@ namespace SpiceBot
 
         public async Task HandleMessage(SocketMessage message)
         {
-            var opinion = GetOpinion(message.Content);
+            var opinion = await GetOpinion(message.Content);
             await VoiceOpinion(message, opinion);
         }
 
@@ -41,17 +43,15 @@ namespace SpiceBot
             }
         }
 
-        private Opinion GetOpinion(string messageContent)
+        private async Task<Opinion> GetOpinion(string messageContent)
         {
             // TODO: This really should be a query of some sort for performance
+            var spiceContextStatements = await EntityFrameworkQueryableExtensions.ToListAsync(_spiceContext.Statements);
             foreach (var thing in _spiceContext.Things)
             {
-                foreach (var statement in _spiceContext.Statements)
+                foreach (var statement in Enumerable.Where(spiceContextStatements, statement => messageContent.Contains(string.Format(statement.Format, thing.Name), StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    if (messageContent.Contains(string.Format(statement.Format, thing.Name), StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        return GetOpinion(statement, thing);
-                    }
+                    return GetOpinion(statement, thing);
                 }
             }
 
