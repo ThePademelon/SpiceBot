@@ -28,10 +28,6 @@ namespace SpiceBot.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Thing>(entity =>
-            {
-                entity.HasNoKey();
-            });
         }
     }
 }
