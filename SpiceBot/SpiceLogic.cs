@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -49,7 +50,12 @@ namespace SpiceBot
             var spiceContextStatements = await EntityFrameworkQueryableExtensions.ToListAsync(_spiceContext.Statements);
             foreach (var thing in _spiceContext.Things)
             {
-                foreach (var statement in Enumerable.Where(spiceContextStatements, statement => messageContent.Contains(string.Format(statement.Format, thing.Name), StringComparison.InvariantCultureIgnoreCase)))
+                bool Match(Statement statement)
+                {
+                    return Regex.IsMatch(messageContent, string.Format(statement.Format, thing.Name));
+                }
+
+                foreach (var statement in spiceContextStatements.Where(Match))
                 {
                     return GetOpinion(statement, thing);
                 }
