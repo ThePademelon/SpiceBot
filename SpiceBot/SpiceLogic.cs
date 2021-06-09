@@ -46,11 +46,4 @@ namespace SpiceBot
             return Opinion.None;
         }
     }
-
-    internal enum Opinion
-    {
-        Based,
-        Cringe,
-        None
-    }
 }

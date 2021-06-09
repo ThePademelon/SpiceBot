@@ -10,7 +10,10 @@ namespace SpiceBot
         private static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
-                .ConfigureServices((hostContext, services) => { services.AddHostedService<DiscordBotHost>(); })
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.AddHostedService<DiscordBotHost>();
+                })
                 .ConfigureAppConfiguration(app =>
                 {
                     app.AddJsonFile("appsettings.json");
