@@ -52,7 +52,7 @@ namespace SpiceBot
             {
                 bool Match(Statement statement)
                 {
-                    return Regex.IsMatch(messageContent, string.Format(statement.Format, thing.Name));
+                    return Regex.IsMatch(messageContent, string.Format(statement.Format, thing.Name), RegexOptions.IgnoreCase);
                 }
 
                 foreach (var statement in spiceContextStatements.Where(Match))
