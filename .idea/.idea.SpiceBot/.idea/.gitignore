@@ -1,0 +1,11 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/modules.xml
+/contentModel.xml
+/projectSettingsUpdater.xml
+/.idea.SpiceBot.iml
+# Datasource local storage ignored files
+/../../../../../../:\CodeProjects\SpiceBot\.idea\.idea.SpiceBot\.idea/dataSources/
+/dataSources.local.xml
