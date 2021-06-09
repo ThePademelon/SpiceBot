@@ -15,24 +15,28 @@ namespace SpiceBot
         {
             _logger = logger;
             _spiceContext = spiceContext;
-
             spiceContext.Database.EnsureCreated();
         }
 
         public async Task HandleMessage(SocketMessage message)
         {
-            switch (GetOpinion(message.Content))
+            var opinion = GetOpinion(message.Content);
+            await VoiceOpinion(message, opinion);
+        }
+
+        private async Task VoiceOpinion(SocketMessage message, Opinion opinion)
+        {
+            switch (opinion)
             {
                 case Opinion.Based:
-                    await message.Channel.SendMessageAsync("Based", messageReference: new MessageReference(message.Id));
-                    break;
                 case Opinion.Cringe:
-                    await message.Channel.SendMessageAsync("Cringe", messageReference: new MessageReference(message.Id));
+                    _logger.LogInformation("Telling {0} that their opinion was {1}.", message.Author.Username, opinion);
+                    await message.Channel.SendMessageAsync(opinion.ToString(), messageReference: new MessageReference(message.Id));
                     break;
                 case Opinion.None:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(opinion));
             }
         }
 
