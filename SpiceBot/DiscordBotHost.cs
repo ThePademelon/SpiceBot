@@ -53,7 +53,7 @@ namespace SpiceBot
             };
         }
 
-        private async Task ClientOnMessageReceived(SocketMessage message)
+        private Task ClientOnMessageReceived(SocketMessage message)
         {
             if (Equals(message.Author.Id, _client.CurrentUser.Id))
             {
@@ -61,8 +61,12 @@ namespace SpiceBot
             }
             else
             {
-                await _logic.HandleMessage(message);
+                // If the socket client awaits this event handler's task then the client will be blocked
+                // So it's best to dispatch a new task
+                _ = Task.Run(async () => await _logic.HandleMessage(message));
             }
+
+            return Task.CompletedTask;
         }
 
         private static Task ClientOnLoggedIn() => _client.StartAsync();
