@@ -9,5 +9,7 @@ namespace SpiceBot
         {
             return Task.CompletedTask;
         }
+
+        public ulong BotId { get; set; }
     }
 }
