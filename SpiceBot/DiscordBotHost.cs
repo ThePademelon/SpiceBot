@@ -4,25 +4,21 @@ using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using SpiceBot.Data;
 
 namespace SpiceBot
 {
     public class DiscordBotHost : IHostedService
     {
-        private readonly ILogger<DiscordBotHost> _logger;
         private static DiscordSocketClient _client;
         private readonly SpiceLogic _logic;
 
-        public DiscordBotHost(IConfiguration config, ILogger<DiscordBotHost> logger, SpiceContext spiceContext)
+        public DiscordBotHost(IConfiguration config, SpiceLogic basedCringeLogic)
         {
-            _logger = logger;
             _client = new DiscordSocketClient();
             _client.LoggedIn += ClientOnLoggedIn;
             _client.MessageReceived += ClientOnMessageReceived;
             _client.LoginAsync(TokenType.Bot, config["Token"]);
-            _logic = new SpiceLogic(logger, spiceContext);
+            _logic = basedCringeLogic;
         }
 
         private async Task ClientOnMessageReceived(SocketMessage message)

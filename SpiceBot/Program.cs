@@ -12,6 +12,9 @@ namespace SpiceBot
             return Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
+                    // TODO: Figure out how to switch logic based on config
+                    // services.AddSingleton<SpiceLogic, BasedCringeLogic>();
+                    services.AddSingleton<SpiceLogic, NumberStationLogic>();
                     services.AddHostedService<DiscordBotHost>();
                     services.AddEntityFrameworkSqlite();
                     services.AddDbContext<SpiceContext>();

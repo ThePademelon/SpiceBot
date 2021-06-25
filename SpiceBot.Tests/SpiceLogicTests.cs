@@ -14,7 +14,7 @@ namespace SpiceBot.Tests
         [InlineData("there are too many pot holes on main street.", Opinion.Cringe)]
         public async Task CanDetermineCorrectOpinion(string message, Opinion opinion)
         {
-            var logic = new SpiceLogic(
+            var logic = new BasedCringeLogic(
                 new NullLogger<DiscordBotHost>(),
                 new SpiceContext()
             );
