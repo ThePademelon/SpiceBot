@@ -56,10 +56,9 @@ namespace SpiceBot.NumberStation
         private readonly Dictionary<string, byte[]> _soundsByName = new ();
 
         /// <summary>
-        /// The location of the audio files on my personal computer.
-        /// Will replace with deployment friendly assembly resource/folder once I'm done debugging.
+        /// The location of the audio files relative to the application.
         /// </summary>
-        private const string CodebaseFileLocation = @"D:\CodeProjects\SpiceBot\SpiceBot\NumberStation\NumberAudio";
+        private const string AudioLocation = @"NumberStation\NumberAudio";
         
         public NumberGenerator()
         {
@@ -75,7 +74,7 @@ namespace SpiceBot.NumberStation
 
         private void AddSound(string s)
         {
-            _soundsByName.Add(s, File.ReadAllBytes(Path.Join(CodebaseFileLocation, s + ".raw")));
+            _soundsByName.Add(s, File.ReadAllBytes(Path.Join(AudioLocation, s + ".raw")));
         }
 
         public byte[] GetNumber()
