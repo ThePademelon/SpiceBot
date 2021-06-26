@@ -80,9 +80,26 @@ namespace SpiceBot.NumberStation
 
         public byte[] GetNumber()
         {
-            var number = _random.Next(0, 11);
-            var soundName = number == 0 ? "bell" : number.ToString();
-            return _soundsByName[soundName];
+            var number = _random.Next(0, 100);
+            if (number == 0) return _soundsByName["bell"];
+            
+            var numberAsString = number.ToString("00");
+            var outSound = new List<byte>();
+
+            var tensFile = numberAsString[0].ToString();
+            if (!tensFile.Equals("0"))
+            {
+                if (!tensFile.Equals("1")) outSound.AddRange(_soundsByName[tensFile]);
+                outSound.AddRange(_soundsByName[10.ToString()]);
+            }
+            
+            var unitsFile = numberAsString[1].ToString();
+            if (!unitsFile.Equals("0"))
+            {
+                outSound.AddRange(_soundsByName[unitsFile]);
+            }
+            
+            return outSound.ToArray();
         }
     }
 }
