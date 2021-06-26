@@ -5,7 +5,7 @@ using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
 
-namespace SpiceBot
+namespace SpiceBot.NumberStation
 {
     internal class NumberStationLogic : SpiceLogic, IDisposable
     {

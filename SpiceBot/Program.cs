@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SpiceBot.Data;
+using SpiceBot.NumberStation;
 
 namespace SpiceBot
 {
