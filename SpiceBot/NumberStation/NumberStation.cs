@@ -81,7 +81,8 @@ namespace SpiceBot.NumberStation
         public byte[] GetNumber()
         {
             var number = _random.Next(0, 100);
-            if (number == 0) return _soundsByName["bell"];
+            var randomBell = _random.Next(6);
+            if (number == 0 || randomBell == 5) return _soundsByName["bell"];
             
             var numberAsString = number.ToString("00");
             var outSound = new List<byte>();
