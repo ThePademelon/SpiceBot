@@ -19,7 +19,7 @@ namespace SpiceBot.NumberStation
 
         public override async Task HandleMessage(SocketMessage message)
         {
-            if (!message.Content.StartsWith("!numberStation", StringComparison.InvariantCultureIgnoreCase)) return;
+            if (!message.Content.StartsWith("!ns", StringComparison.InvariantCultureIgnoreCase)) return;
             var guildUser = (IGuildUser) message.Author;
             var voiceChannel = guildUser.VoiceChannel;
             if (voiceChannel is null)
