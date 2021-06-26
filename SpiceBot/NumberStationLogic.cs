@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -6,9 +7,10 @@ using Microsoft.Extensions.Logging;
 
 namespace SpiceBot
 {
-    internal class NumberStationLogic : SpiceLogic
+    internal class NumberStationLogic : SpiceLogic, IDisposable
     {
         private readonly ILogger<DiscordBotHost> _logger;
+        private readonly List<NumberStation> _runningStations = new();
 
         public NumberStationLogic(ILogger<DiscordBotHost> logger)
         {
@@ -29,12 +31,21 @@ namespace SpiceBot
             if (voiceBotUser is null)
             {
                 _logger.LogInformation($"Joining {voiceChannel.Name} channel.");
-                await voiceChannel.ConnectAsync();
+                var audioClient = await voiceChannel.ConnectAsync();
+                _runningStations.Add(new NumberStation(audioClient));
             }
             else
             {
                 _logger.LogInformation($"Leaving {voiceChannel.Name} channel.");
                 await voiceChannel.DisconnectAsync();
+            }
+        }
+
+        public void Dispose()
+        {
+            foreach (var station in _runningStations)
+            {
+                station.Dispose();
             }
         }
     }
