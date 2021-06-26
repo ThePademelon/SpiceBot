@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Timers;
@@ -29,7 +30,7 @@ namespace SpiceBot.NumberStation
             _numberPlayTimer.Stop();
             await _audioClient.SetSpeakingAsync(true);
             var bytes = _numberGenerator.GetNumber();
-            await bytes.CopyToAsync(_pcmStream);
+            await _pcmStream.WriteAsync(bytes);
             await _audioClient.SetSpeakingAsync(false);
             _numberPlayTimer.Start();
         }
@@ -52,6 +53,7 @@ namespace SpiceBot.NumberStation
     internal class NumberGenerator
     {
         private readonly Random _random;
+        private readonly Dictionary<string, byte[]> _soundsByName = new ();
 
         /// <summary>
         /// The location of the audio files on my personal computer.
@@ -62,13 +64,25 @@ namespace SpiceBot.NumberStation
         public NumberGenerator()
         {
             _random = new Random();
+
+            for (var i = 1; i <= 10; i++)
+            {
+                var num = i.ToString();
+                AddSound(num);
+            }
+            AddSound("bell");
         }
 
-        public FileStream GetNumber()
+        private void AddSound(string s)
+        {
+            _soundsByName.Add(s, File.ReadAllBytes(Path.Join(CodebaseFileLocation, s + ".raw")));
+        }
+
+        public byte[] GetNumber()
         {
             var number = _random.Next(0, 11);
-            var filename = number == 0 ? "bell" : number.ToString();
-            return File.OpenRead(Path.Join(CodebaseFileLocation, filename + ".raw"));
+            var soundName = number == 0 ? "bell" : number.ToString();
+            return _soundsByName[soundName];
         }
     }
 }
